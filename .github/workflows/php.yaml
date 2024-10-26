@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: parmincloud/container/php
+      IMAGE_NAME: parmincloud/containers/php
 
     steps:
     - name: Checkout repository

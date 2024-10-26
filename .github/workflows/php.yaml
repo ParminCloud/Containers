@@ -2,6 +2,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - .github/workflows/php.yaml
+      - php/*
+      - '!php/README.md'
 
 permissions:
     contents: write

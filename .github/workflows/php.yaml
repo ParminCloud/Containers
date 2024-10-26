@@ -24,6 +24,7 @@ jobs:
             start: fpm
           - php: fpm
             start: nginx
+
     name: Build Image
     runs-on: ubuntu-latest
     env:
@@ -59,7 +60,7 @@ jobs:
       with:
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        context: .
+        context: ./php
         labels: ${{ steps.meta.outputs.labels }}
         push: true
         platforms: linux/amd64,linux/arm64,linux/arm,linux/386,windows/amd64,windows/arm64,windows/arm,windows/386,freebsd/amd64,freebsd/arm64,freebsd/arm,freebsd/386

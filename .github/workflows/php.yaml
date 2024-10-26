@@ -69,7 +69,7 @@ jobs:
           PHP_RUNTIME=${{ matrix.runtime.php }}
           DEBIAN_VERSION=bookworm
           PHP_VERSION=${{ matrix.php_version }}
-          PHP_RUNTIME=${{ matrix.runtime.start }}
+          START_RUNTIME=${{ matrix.runtime.start }}
         tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:php${{ matrix.php_version }}-${{ matrix.runtime.start }}
 

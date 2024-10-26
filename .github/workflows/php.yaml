@@ -64,7 +64,7 @@ jobs:
         file: ./php/Containerfile
         labels: ${{ steps.meta.outputs.labels }}
         push: true
-        platforms: linux/amd64,linux/arm64,linux/arm,linux/386,windows/amd64,windows/arm64,windows/arm,windows/386,freebsd/amd64,freebsd/arm64,freebsd/arm,freebsd/386
+        platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/riscv64,linux/s390x
         build-args: |
           PHP_RUNTIME=${{ matrix.runtime.php }}
           DEBIAN_VERSION=bookworm

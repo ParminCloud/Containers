@@ -1,5 +1,7 @@
 # All in One PHP Container
 
+Mostly used PHP extentions are pre installed and Binaries are stripped and multi-staged making this image to be smaller in size by about 1/3
+
 ## Variants
 
 * apache: Based on Apache and serves your code using Apache2

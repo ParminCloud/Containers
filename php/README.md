@@ -22,3 +22,19 @@ Mostly used PHP extentions are pre installed and Binaries are stripped and multi
 
 * `DOCUMENT_ROOT`: Defaults to `/var/www/html` and sets root dir of servers (works on apache and nginx)
     > In laravel you might set it to `/var/www/html/public`
+
+## Example Usage
+
+Containerfile/Dockerfile:
+
+```containerfile
+FROM ghcr.io/parmincloud/containers/php:php8.1-nginx
+
+COPY composer.* /var/www/html/
+COPY package.* /var/www/html/
+RUN yarn install # npm is also available
+RUN composer install --no-scripts --no-autoloader --no-interaction --prefer-dist
+
+COPY . .
+RUN composer dump-autoload --optimize
+```

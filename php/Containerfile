@@ -155,8 +155,6 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/sbin /usr/local/sbin
 COPY --from=builder /usr/local/etc /usr/local/etc
 COPY --from=builder /PACKAGES /
-COPY --from=builder /etc/apache2 /etc/apache2
-COPY --from=builder /usr/lib/apache2 /usr/lib/apache2
 COPY opcache.ini /usr/local/etc/php/conf.d/zzz-opcache.ini
 COPY error-logging.ini /usr/local/etc/php/conf.d/zzz-error-logging.ini
 
@@ -185,6 +183,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	apt-get update && \
 	apt-get install --no-install-recommends -y nginx; \
 	fi
+
+COPY --from=builder /usr/lib/apache2 /usr/lib/apache2
+COPY --from=builder /etc/apache2 /etc/apache2
 
 COPY --from=docker.io/library/composer:2 /usr/bin/composer /usr/local/bin/composer
 RUN composer global require bamarni/symfony-console-autocomplete

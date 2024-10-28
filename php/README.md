@@ -1,5 +1,7 @@
 # All in One PHP Container
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ParminCloud/Containers/php.yaml)
+
 Mostly used PHP extentions are pre installed and Binaries are stripped and multi-staged making this image to be smaller in size by about 1/3
 
 ## Variants

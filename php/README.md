@@ -38,3 +38,7 @@ RUN composer install --no-scripts --no-autoloader --no-interaction --prefer-dist
 COPY . .
 RUN composer dump-autoload --optimize
 ```
+
+## Known Issues
+
+* Multi Platform builds are disabled due to [this issue](https://github.com/ParminCloud/Containers/issues/1)

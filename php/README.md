@@ -44,3 +44,11 @@ RUN composer dump-autoload --optimize
 ## Known Issues
 
 * Multi Platform builds are disabled due to [this issue](https://github.com/ParminCloud/Containers/issues/1)
+
+
+## FAQ
+
+* Why gRPC (and OTLP gRPC) Clients are not working in some environments?  
+  Enable froking support for gRPC By setting these ENVs (According to https://github.com/grpc/grpc/blob/master/doc%2Ffork_support.md) 
+  GRPC_ENABLE_FORK_SUPPORT=true  
+  GRPC_POLL_STRATEGY=epoll1  

@@ -157,6 +157,8 @@ COPY --from=builder /usr/local/etc /usr/local/etc
 COPY --from=builder /PACKAGES /
 COPY opcache.ini /usr/local/etc/php/conf.d/zzz-opcache.ini
 COPY error-logging.ini /usr/local/etc/php/conf.d/zzz-error-logging.ini
+RUN mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
+	rm -f /usr/local/etc/php/php.ini-development
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	--mount=type=cache,target=/var/lib/apt,sharing=locked \

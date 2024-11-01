@@ -197,7 +197,7 @@ RUN composer global require bamarni/symfony-console-autocomplete
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	--mount=type=cache,target=/var/lib/apt,sharing=locked \
-	&& curl -sSfL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/pgdg.gpg \
+	curl -sSfL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/pgdg.gpg \
 	&& curl -sSfL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/yarn.gpg \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
 	&& echo "deb http://apt.postgresql.org/pub/repos/apt ${DEBIAN_VERSION}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
@@ -207,8 +207,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	postgresql-client \
 	postgis \
 	nodejs \
-	yarn \
-	&& npm install -g npm
+	yarn
 
 WORKDIR /var/www/html/
 

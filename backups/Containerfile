@@ -1,0 +1,17 @@
+ARG DEBIAN_VERSION
+FROM docker.io/library/debian:${DEBIAN_VERSION}-slim
+
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+	--mount=type=cache,target=/var/lib/apt,sharing=locked \
+	apt-get update && \
+	apt-get install -y cron && \
+	rm -rf /etc/cron.*/*
+RUN mkdir -p /opt/parmincloud/backups
+
+COPY --chmod=0775 entrypoint.sh /opt/parmincloud/backups/entrypoint
+COPY --chmod=0775 start.sh /opt/parmincloud/backups/start-container
+COPY --chmod=0775 backup.sh /opt/parmincloud/backups/backup
+
+ENTRYPOINT [ "/opt/parmincloud/backups/entrypoint" ]
+CMD ["/opt/parmincloud/backups/start-container"]

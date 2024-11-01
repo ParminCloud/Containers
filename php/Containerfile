@@ -139,6 +139,7 @@ RUN mkdir -p /etc/apache2 /usr/lib/apache2
 
 FROM docker.io/library/debian:${DEBIAN_VERSION}-slim
 ARG START_RUNTIME
+ARG DEBIAN_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
@@ -159,6 +160,8 @@ COPY opcache.ini /usr/local/etc/php/conf.d/zzz-opcache.ini
 COPY error-logging.ini /usr/local/etc/php/conf.d/zzz-error-logging.ini
 RUN mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
 	rm -f /usr/local/etc/php/php.ini-development
+
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	--mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -194,19 +197,18 @@ RUN composer global require bamarni/symfony-console-autocomplete
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	--mount=type=cache,target=/var/lib/apt,sharing=locked \
-	apt-get update \
-	&& . /etc/os-release \
-	&& echo "deb http://apt.postgresql.org/pub/repos/apt $VERSION_CODENAME-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-	&& curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-	&& apt-get update -y \
-	&& apt-get install -y --no-install-recommends --show-progress postgresql-client-16 postgis \
-	&& curl -sL https://deb.nodesource.com/setup_20.x | bash - \
-	&& apt-get install -y nodejs \
-	&& npm install -g npm \
-	&& curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+	&& curl -sSfL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/pgdg.gpg \
+	&& curl -sSfL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/yarn.gpg \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
+	&& echo "deb http://apt.postgresql.org/pub/repos/apt ${DEBIAN_VERSION}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+	&& curl -sL https://deb.nodesource.com/setup_22.x | bash - \
 	&& apt-get update \
-	&& apt-get install --no-install-recommends -y yarn
+	&& apt-get install -y --no-install-recommends \
+	postgresql-client \
+	postgis \
+	nodejs \
+	yarn \
+	&& npm install -g npm
 
 WORKDIR /var/www/html/
 

@@ -2,6 +2,6 @@
 
 Publicly available Container Images (published on `ghcr.io`)
 
-## Avaiable images
+## Available images
 
 * [PHP](./php/README.md)

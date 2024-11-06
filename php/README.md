@@ -11,7 +11,7 @@ Mostly used PHP extentions are pre installed and Binaries are stripped and multi
 * fpm: Based on PHP FPM can be used as FactCGI server
 * cli: Contains no builtin webserver (Swoole is pre-installed)
 
-## Avaialable Images
+## Available Images
 
 * ghcr.io/parmincloud/containers/php:php8.1-nginx
 * ghcr.io/parmincloud/containers/php:php8.1-apache
@@ -49,6 +49,6 @@ RUN composer dump-autoload --optimize
 ## FAQ
 
 * Why gRPC (and OTLP gRPC) Clients are not working in some environments?  
-  Enable froking support for gRPC By setting these ENVs (According to https://github.com/grpc/grpc/blob/master/doc%2Ffork_support.md) 
+  Enable froking support for gRPC By setting these ENVs (According to https://github.com/grpc/grpc/blob/master/doc%2Ffork_support.md)  
   GRPC_ENABLE_FORK_SUPPORT=true  
   GRPC_POLL_STRATEGY=epoll1  

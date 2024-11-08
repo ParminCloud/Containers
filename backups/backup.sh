@@ -6,7 +6,7 @@ exec 100>"$LOCKFILE"
 remove-lock() {
 	flock -u 100
 	flock -xn 100
-	rm -f $LOCKFILE
+	rm -f "$LOCKFILE"
 }
 
 trap remove-lock EXIT

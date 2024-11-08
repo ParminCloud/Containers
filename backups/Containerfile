@@ -1,12 +1,42 @@
 ARG DEBIAN_VERSION
+FROM docker.io/library/debian:${DEBIAN_VERSION}-slim AS awscli-installer
+
+# Based on Official Image
+
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+	--mount=type=cache,target=/var/lib/apt,sharing=locked \
+	apt-get update && \
+	apt-get install -y curl jq unzip && \
+	rm -rf /etc/cron.*/*
+
+RUN cd /tmp && \
+	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
+	-o "awscliv2.zip" && \
+	unzip awscliv2.zip && \
+	./aws/install --bin-dir /aws-cli-bin/ --update
+
 FROM docker.io/library/debian:${DEBIAN_VERSION}-slim
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	--mount=type=cache,target=/var/lib/apt,sharing=locked \
 	apt-get update && \
-	apt-get install -y cron && \
+	apt-get install -y \
+	cron \
+	curl \
+	jq \
+	unzip \
+	mandoc && \
 	rm -rf /etc/cron.*/*
+
+COPY --chmod=0775 \
+	--from=awscli-installer \
+	/usr/local/aws-cli/ /usr/local/aws-cli/
+COPY --chmod=0775 \
+	--from=awscli-installer \
+	/aws-cli-bin/ /usr/local/bin/
+
 RUN mkdir -p /opt/parmincloud/backups
 
 COPY --chmod=0775 entrypoint.sh /opt/parmincloud/backups/entrypoint

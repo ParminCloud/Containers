@@ -9,6 +9,9 @@ if [ -z "$S3_BUCKET" ]; then
 	exit 1
 fi
 
-echo "${BACKUP_SCHEDULE} root /opt/parmincloud/backups/backup >/proc/1/fd/1 2>/proc/1/fd/2" | tee /etc/crontab
-
-exec cron -f -l 2
+if [ -z "$BACKUP_SCHEDULE" ]; then
+	exec /opt/parmincloud/backups/backup
+else
+	echo "${BACKUP_SCHEDULE} root /opt/parmincloud/backups/backup >/proc/1/fd/1 2>/proc/1/fd/2" | tee /etc/crontab
+	exec cron -f -l 2
+fi

@@ -52,3 +52,10 @@ COPY --chmod=0775 backup.sh /opt/parmincloud/backups/backup
 
 ENTRYPOINT [ "/opt/parmincloud/backups/entrypoint" ]
 CMD ["/opt/parmincloud/backups/start-container"]
+
+FROM base AS file-backup
+
+ENV BACKUP_CMD "/opt/parmincloud/backups/file-backup"
+ENV DATA_DIR "/data"
+
+COPY --chmod=0775 file-backup.sh /opt/parmincloud/backups/file-backup

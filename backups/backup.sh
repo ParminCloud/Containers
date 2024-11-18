@@ -31,7 +31,7 @@ if [ -n "$BACKUP_PASSWORD" ]; then
 	LOCAL_FILENAME="$LOCAL_FILENAME.gpg"
 fi
 
-log "Uploading bacup to S3..."
+log "Uploading backup to S3..."
 REMOTE_FILENAME="$(current-datetime).$(extract-filetype "$LOCAL_FILENAME")"
 
 S3_UPLOAD_URI="s3://${S3_BUCKET}/$REMOTE_FILENAME"

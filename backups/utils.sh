@@ -5,7 +5,7 @@ current-datetime() {
 }
 
 log() {
-	echo "$(current-datetime) $*"
+	awk "BEGIN { print \"$@\" > \"/dev/fd/2\" }"
 }
 
 extract-filetype() {

@@ -59,3 +59,24 @@ ENV BACKUP_CMD "/opt/parmincloud/backups/file-backup"
 ENV DATA_DIR "/data"
 
 COPY --chmod=0775 file-backup.sh /opt/parmincloud/backups/file-backup
+
+FROM base AS pg-basebackup
+
+ARG DEBIAN_VERSION
+ARG PG_VERSION
+
+ENV BACKUP_CMD "/opt/parmincloud/backups/pg-basebackup"
+ENV PGHOST ""
+ENV PGPORT ""
+ENV PGUSER ""
+ENV PGPASSWORD ""
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+	--mount=type=cache,target=/var/lib/apt,sharing=locked \
+	install -d /usr/share/postgresql-common/pgdg && \
+	curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
+	echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt ${DEBIAN_VERSION}-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+	apt-get update && \
+	apt-get install -y postgresql-client-${PG_VERSION}
+
+COPY --chmod=0775 pg-basebackup.sh /opt/parmincloud/backups/pg-basebackup

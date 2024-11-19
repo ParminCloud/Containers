@@ -35,7 +35,7 @@ pg_basebackup -D ${DATA_DIR} \
 
 echo "# TYPE  DATABASE        USER            ADDRESS                 METHOD
 
-# "local" is for Unix domain socket connections only
+# 'local' is for Unix domain socket connections only
 local   all             all                                     trust
 # IPv4 local connections:
 host    all             all             127.0.0.1/32            trust

@@ -21,10 +21,10 @@ if [ -z "$PGPASSWORD" ]; then
 	exit 1
 fi
 
-DATA_DIR=$(mktemp -d)
+DATA_DIR="$(mktemp -d)"
 
 log "Create basebackup"
-pg_basebackup -D ${DATA_DIR} \
+pg_basebackup -D "${DATA_DIR}" \
 	-c fast \
 	-X stream \
 	-l backup_label \
@@ -47,10 +47,10 @@ local   replication     all                                     trust
 host    replication     all             127.0.0.1/32            trust
 host    replication     all             ::1/128                 trust
 
-host all,replication all all scram-sha-256" > ${DATA_DIR}/pg_hba.conf
+host all,replication all all scram-sha-256" > "${DATA_DIR}/pg_hba.conf"
 
 echo "listen_addresses = '*'
-port = 5432" > ${DATA_DIR}/postgresql.conf
+port = 5432" > "${DATA_DIR}/postgresql.conf"
 
 log "Creating GZipped Tar Archive of backup"
 

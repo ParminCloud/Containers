@@ -23,7 +23,9 @@ fi
 
 DATA_DIR="$(mktemp -d)"
 
-log "Create basebackup"
+trap "rm -rf $DATA_DIR" EXIT
+
+log "Creating basebackup"
 pg_basebackup -D "${DATA_DIR}" \
 	-c fast \
 	-X stream \
@@ -57,5 +59,7 @@ log "Creating GZipped Tar Archive of backup"
 BACKUP_OUT=/tmp/backup.tar.gz
 
 tar -C "$DATA_DIR" --acls --xattrs -cpaf "$BACKUP_OUT" .
+
+rm -rf "$DATA_DIR"
 
 echo "${BACKUP_OUT}"

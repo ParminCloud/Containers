@@ -21,23 +21,12 @@ if [ -z "$PGPASSWORD" ]; then
 	exit 1
 fi
 
-DATA_DIR="$(mktemp -d)"
-
-trap "rm -rf $DATA_DIR" EXIT
+BACKUP_OUT=/tmp/dump.sql.gz
 
 log "Creating dump of database"
 pg_dumpall \
 	-h "$PGHOST" \
 	-p "$PGPORT" \
-	-U "$PGUSER" > "${DATA_DIR}/dump.sql"
-
-
-log "Creating GZipped Tar Archive of backup"
-
-BACKUP_OUT=/tmp/backup.tar.gz
-
-tar -C "$DATA_DIR" --acls --xattrs -cpaf "$BACKUP_OUT" .
-
-rm -rf "$DATA_DIR"
+	-U "$PGUSER" | gzip -9 > "${BACKUP_OUT}"
 
 echo "${BACKUP_OUT}"

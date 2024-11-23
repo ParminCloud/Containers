@@ -88,3 +88,15 @@ FROM base-pg AS pg-dump
 
 ENV BACKUP_CMD "/opt/parmincloud/backups/pg-dump"
 COPY --chmod=0775 pg-dump.sh /opt/parmincloud/backups/pg-dump
+
+FROM base AS mysql-dump
+
+ENV BACKUP_CMD "/opt/parmincloud/backups/mysql-dump"
+ENV DATA_DIR "/data"
+
+ENV MYSQL_HOST ""
+ENV MYSQL_PORT ""
+ENV MYSQL_USER ""
+ENV MYSQL_PASSWORD ""
+
+COPY --chmod=0775 mysql-dump.sh /opt/parmincloud/backups/mysql-dump

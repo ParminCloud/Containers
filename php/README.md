@@ -18,7 +18,9 @@ Mostly used PHP extentions are pre installed and Binaries are stripped and multi
 * ghcr.io/parmincloud/containers/php:php8.1-fpm
 * ghcr.io/parmincloud/containers/php:php8.1-cli
 
-> Replace 8.1 with your PHP Version (8.1, 8.2 and 8.3 is available)
+> Replace 8.1 with your PHP Version (8.1, 8.2, 8.3 and 8.4 is available)
+
+We are supporting versions that are listed here
 
 ## ENVs
 

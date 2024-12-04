@@ -9,8 +9,8 @@ WORKDIR /var/www/html/
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
 ENV TERM=xterm-color
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV PATH /var/www/html/vendor/bin:/composer/vendor/bin:$PATH
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV PATH=/var/www/html/vendor/bin:/composer/vendor/bin:$PATH
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN pecl channel-update pecl.php.net
@@ -144,10 +144,10 @@ ARG DEBIAN_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
 ENV TERM=xterm-color
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV PATH /var/www/html/vendor/bin:/composer/vendor/bin:$PATH
-ENV PHP_INI_DIR /usr/local/etc/php
-ENV START_RUNTIME ${START_RUNTIME}
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV PATH=/var/www/html/vendor/bin:/composer/vendor/bin:$PATH
+ENV PHP_INI_DIR=/usr/local/etc/php
+ENV START_RUNTIME=${START_RUNTIME}
 ENV DOCUMENT_ROOT=/var/www/html
 
 COPY --from=builder /usr/local/include/ /usr/local/include/

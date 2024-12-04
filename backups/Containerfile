@@ -18,12 +18,15 @@ RUN cd /tmp && \
 
 FROM docker.io/library/debian:${DEBIAN_VERSION}-slim AS base
 
-ENV BACKUP_SCHEDULE ""
-ENV BACKUP_RETENTION_DAYS ""
-ENV BACKUP_PASSWORD ""
-ENV BACKUP_CMD "false"
-ENV S3_PREFIX ""
-ENV S3_BUCKET ""
+ENV BACKUP_SCHEDULE=""
+ENV BACKUP_RETENTION_DAYS=""
+ENV BACKUP_PASSWORD=""
+ENV BACKUP_CMD="false"
+ENV S3_PREFIX=""
+ENV S3_BUCKET=""
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LC_ALL=C.UTF-8
+ENV TERM=xterm-color
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -66,10 +69,10 @@ FROM base AS base-pg
 ARG DEBIAN_VERSION
 ARG PGVERSION
 
-ENV PGHOST ""
-ENV PGPORT ""
-ENV PGUSER ""
-ENV PGPASSWORD ""
+ENV PGHOST=""
+ENV PGPORT=""
+ENV PGUSER=""
+ENV PGPASSWORD=""
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	--mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -91,12 +94,23 @@ COPY --chmod=0775 pg-dump.sh /opt/parmincloud/backups/pg-dump
 
 FROM base AS mysql-dump
 
-ENV BACKUP_CMD "/opt/parmincloud/backups/mysql-dump"
-ENV DATA_DIR "/data"
+ENV BACKUP_CMD="/opt/parmincloud/backups/mysql-dump"
+ENV DATA_DIR="/data"
 
-ENV MYSQL_HOST ""
-ENV MYSQL_PORT ""
-ENV MYSQL_USER ""
-ENV MYSQL_PASSWORD ""
+ENV MYSQL_HOST=""
+ENV MYSQL_PORT=""
+ENV MYSQL_USER=""
+ENV MYSQL_PASSWORD=""
+
+RUN curl -L --output mysql-apt-confg.deb https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb && \
+	apt-get update && \
+	apt-get install -y lsb-release && \
+	dpkg -i ./mysql-apt-confg.deb && \
+	rm -f mysql-apt-confg.deb
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+	--mount=type=cache,target=/var/lib/apt,sharing=locked \
+	apt-get update && \
+	apt-get install -y mysql-client
 
 COPY --chmod=0775 mysql-dump.sh /opt/parmincloud/backups/mysql-dump

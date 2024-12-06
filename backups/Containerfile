@@ -120,7 +120,7 @@ ENV BACKUP_CMD="/opt/parmincloud/backups/ssh-file"
 ENV DATA_DIR="/data"
 
 ENV SSH_HOST=""
-ENV SSH_PORT=""
+ENV SSH_PORT="22"
 ENV SSH_USER=""
 ENV SSH_PASSWORD=""
 ENV SSH_PRIVATE_KEY=""
@@ -131,3 +131,21 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	apt-get install -y openssh-client sshpass
 
 COPY --chmod=0775 ssh-file.sh /opt/parmincloud/backups/ssh-file
+
+FROM base AS ssh-command
+
+ENV BACKUP_CMD="/opt/parmincloud/backups/ssh-command"
+
+ENV SSH_HOST=""
+ENV SSH_PORT="22"
+ENV SSH_USER=""
+ENV SSH_PASSWORD=""
+ENV SSH_PRIVATE_KEY=""
+ENV SSH_COMMAND=""
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+	--mount=type=cache,target=/var/lib/apt,sharing=locked \
+	apt-get update && \
+	apt-get install -y openssh-client sshpass
+
+COPY --chmod=0775 ssh-file.sh /opt/parmincloud/backups/ssh-command

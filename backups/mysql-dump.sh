@@ -31,6 +31,8 @@ mysqldump \
 	--user="${MYSQL_USER}" \
 	--single-transaction \
 	--get-server-public-key \
+	--compress \
+	--single-transaction \
 	--all-databases | gzip -9 > "${BACKUP_OUT}"
 
 echo "${BACKUP_OUT}"

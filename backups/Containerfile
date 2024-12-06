@@ -95,7 +95,6 @@ COPY --chmod=0775 pg-dump.sh /opt/parmincloud/backups/pg-dump
 FROM base AS mysql-dump
 
 ENV BACKUP_CMD="/opt/parmincloud/backups/mysql-dump"
-ENV DATA_DIR="/data"
 
 ENV MYSQL_HOST=""
 ENV MYSQL_PORT=""
@@ -114,3 +113,21 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	apt-get install -y mysql-client
 
 COPY --chmod=0775 mysql-dump.sh /opt/parmincloud/backups/mysql-dump
+
+FROM base AS ssh-file
+
+ENV BACKUP_CMD="/opt/parmincloud/backups/ssh-file"
+ENV DATA_DIR="/data"
+
+ENV SSH_HOST=""
+ENV SSH_PORT=""
+ENV SSH_USER=""
+ENV SSH_PASSWORD=""
+ENV SSH_PRIVATE_KEY=""
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+	--mount=type=cache,target=/var/lib/apt,sharing=locked \
+	apt-get update && \
+	apt-get install -y openssh-client sshpass
+
+COPY --chmod=0775 ssh-file.sh /opt/parmincloud/backups/ssh-file

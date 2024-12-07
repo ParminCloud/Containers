@@ -42,7 +42,7 @@ BACKUP_OUT=/tmp/backup.tar.gz
 
 log "Creating GZipped Tar Archive of backups"
 
-REMOTE_COMMAND="tar -C \"$DATA_DIR\" --acls --xattrs -cpaf - ."
+REMOTE_COMMAND="tar -C \"$DATA_DIR\" --acls --xattrs -zcpaf - ."
 
 if [ "${SSH_AUTH}" = *"key"* ]; then
 	ssh -n \

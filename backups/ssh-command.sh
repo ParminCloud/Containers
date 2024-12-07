@@ -22,7 +22,7 @@ if [ ! -f ${HOME}/.ssh/id_rsa ]; then
 	if [ -z "$SSH_PRIVATE_KEY" ]; then
 		export SSH_AUTH="password"
 		if [ -z "$SSH_PASSWORD" ]; then
-			log "You need to set the SSH_PASSWORD environment variable. or mount private key at /root/.ssh/id_rsa"
+			log "You need to set the SSH_PASSWORD environment variable. or mount private key at /root/.ssh/id_rsa or set SSH_PRIVATE_KEY environment variable"
 			exit 1
 		fi
 	fi

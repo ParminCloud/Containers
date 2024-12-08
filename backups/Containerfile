@@ -103,7 +103,7 @@ ENV MYSQL_PASSWORD=""
 
 RUN curl -L --output mysql-apt-confg.deb https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb && \
 	apt-get update && \
-	apt-get install -y lsb-release && \
+	apt-get install -y lsb-release wget && \
 	dpkg -i ./mysql-apt-confg.deb && \
 	rm -f mysql-apt-confg.deb
 

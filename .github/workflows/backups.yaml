@@ -1,0 +1,133 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/backups.yaml
+      - backups/*
+      - '!backups/README.md'
+
+permissions:
+    contents: write
+    packages: write
+
+jobs:
+  build-image:
+    strategy:
+      matrix:
+        variants:
+          - name: file-backup
+            tag: file-backup
+            args: |
+              DEBIAN_VERSION=bookworm
+          - name: mongo-dump
+            tag: mongodump
+            args: |
+              DEBIAN_VERSION=bookworm
+          - name: mysql-dump
+            tag: mysqldump
+            args: |
+              DEBIAN_VERSION=bookworm
+          - name: ssh-file
+            tag: sshfile
+            args: |
+              DEBIAN_VERSION=bookworm
+          - name: ssh-command
+            tag: sshcommand
+            args: |
+              DEBIAN_VERSION=bookworm
+          - name: pg-basebackup
+            tag: pg13-basebackup
+            args: |
+              PGVERSION=13
+              DEBIAN_VERSION=bookworm
+          - name: pg-dump
+            tag: pg13-dump
+            args: |
+              PGVERSION=13
+              DEBIAN_VERSION=bookworm
+          - name: pg-basebackup
+            tag: pg14-basebackup
+            args: |
+              PGVERSION=14
+              DEBIAN_VERSION=bookworm
+          - name: pg-dump
+            tag: pg14-dump
+            args: |
+              PGVERSION=14
+              DEBIAN_VERSION=bookworm
+          - name: pg-basebackup
+            tag: pg15-basebackup
+            args: |
+              PGVERSION=15
+              DEBIAN_VERSION=bookworm
+          - name: pg-dump
+            tag: pg15-dump
+            args: |
+              PGVERSION=15
+              DEBIAN_VERSION=bookworm
+          - name: pg-basebackup
+            tag: pg16-basebackup
+            args: |
+              PGVERSION=16
+              DEBIAN_VERSION=bookworm
+          - name: pg-dump
+            tag: pg16-dump
+            args: |
+              PGVERSION=16
+              DEBIAN_VERSION=bookworm
+          - name: pg-basebackup
+            tag: pg17-basebackup
+            args: |
+              PGVERSION=17
+          - name: pg-dump
+            tag: pg17-dump
+            args: |
+              PGVERSION=17
+              DEBIAN_VERSION=bookworm
+
+    name: Build Image
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: parmincloud/containers/backups
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log into registry ${{ env.REGISTRY }}
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract Docker metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+    - name: Build and push Docker image
+      id: build-and-push-release
+      uses: docker/build-push-action@v6
+      with:
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        context: ./backups
+        file: ./backups/Containerfile
+        labels: ${{ steps.meta.outputs.labels }}
+        target: ${{ matrix.variants.name }}
+        push: true
+        platforms: linux/amd64
+        build-args: ${{ matrix.variants.args }}
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.variants.tag }}
+

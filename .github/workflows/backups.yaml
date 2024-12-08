@@ -80,6 +80,7 @@ jobs:
             tag: pg17-basebackup
             args: |
               PGVERSION=17
+              DEBIAN_VERSION=bookworm
           - name: pg-dump
             tag: pg17-dump
             args: |

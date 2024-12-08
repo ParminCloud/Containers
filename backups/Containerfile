@@ -148,4 +148,18 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	apt-get update && \
 	apt-get install -y openssh-client sshpass
 
-COPY --chmod=0775 ssh-file.sh /opt/parmincloud/backups/ssh-command
+COPY --chmod=0775 ssh-command.sh /opt/parmincloud/backups/ssh-command
+
+FROM base AS mongo-dump
+
+ENV BACKUP_CMD="/opt/parmincloud/backups/mongo-command"
+
+ENV MONGODB_URI=""
+
+RUN . /etc/os-release; \
+	curl -L https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian${VERSION_ID}-x86_64-100.10.0.deb --output=mongodb-database-tools.deb && \
+	dpkg -i mongodb-database-tools.deb && \
+	rm mongodb-database-tools.deb -f
+
+
+COPY --chmod=0775 mongo-dump.sh /opt/parmincloud/backups/mongo-dump

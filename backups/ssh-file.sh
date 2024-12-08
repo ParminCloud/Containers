@@ -17,12 +17,12 @@ if [ -z "$DATA_DIR" ]; then
 	exit 1
 fi
 export SSH_AUTH="key-file"
-if [ ! -f ${HOME}/.ssh/id_rsa ]; then
+if [ ! -f "${HOME}/.ssh/id_rsa" ]; then
 	export SSH_AUTH="key"
 	if [ -z "$SSH_PRIVATE_KEY" ]; then
 		export SSH_AUTH="password"
 		if [ -z "$SSH_PASSWORD" ]; then
-			log "You need to set the SSH_PASSWORD environment variable. or mount private key at /root/.ssh/id_rsa"
+			log "You need to set the SSH_PASSWORD environment variable. or mount private key at ${HOME}/.ssh/id_rsa"
 			exit 1
 		fi
 	fi

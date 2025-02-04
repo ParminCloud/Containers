@@ -32,6 +32,9 @@ mysqldump \
 	--single-transaction \
 	--get-server-public-key \
 	--compress \
+	--triggers \
+	--routines \
+	--events \
 	--single-transaction \
 	--all-databases | gzip -9 > "${BACKUP_OUT}"
 

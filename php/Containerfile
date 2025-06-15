@@ -68,7 +68,7 @@ RUN export MAKE="make -j$(nproc)" && \
 	redis \
 	grpc \
 	protobuf \
-	imagick
+	imagick \
 	opentelemetry && \
 	rm -rf /tmp/pear && \
 	docker-php-ext-enable \

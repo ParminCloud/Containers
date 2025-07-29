@@ -1,0 +1,71 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/patroni.yaml
+      - patroni/*
+      - '!patroni/README.md'
+
+permissions:
+    contents: write
+    packages: write
+
+jobs:
+  build-image:
+    strategy:
+      matrix:
+        pg_version:
+          - "17"
+          - "16"
+          - "15"
+          - "14"
+          - "13"
+
+    name: Build Image
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: parmincloud/containers/patroni
+      PATRONI_VERSION: 4.0.6
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log into registry ${{ env.REGISTRY }}
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract Docker metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+    - name: Build and push Docker image
+      id: build-and-push-release
+      uses: docker/build-push-action@v6
+      with:
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        context: ./patroni
+        file: ./patroni/Containerfile
+        labels: ${{ steps.meta.outputs.labels }}
+        push: true
+        platforms: linux/amd64
+        build-args: |
+            PGVERSION=${{ matrix.pg_version }}
+            PATRONI_VERSION=${{ env.PATRONI_VERSION }}
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.PATRONI_VERSION }}-pg${{ matrix.pg_version }}
+

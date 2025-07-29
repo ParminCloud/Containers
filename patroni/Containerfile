@@ -1,0 +1,44 @@
+ARG PGVERSION
+ARG PATRONI_VERSION
+FROM postgres:${PGVERSION}
+
+ARG PGVERSION
+ARG PATRONI_VERSION
+ENV PATRONI_CONFIG=/etc/patroni.yml
+
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+	python3-pip \
+	python3-dev \
+	python3-full \
+	libpq-dev \
+	build-essential \
+	postgresql-plpython3-${PGVERSION} \
+	curl \
+	jq \
+	net-tools \
+	iputils-ping \
+	dumb-init \
+	vim \
+	less \
+	locales \
+	&& \
+	rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m venv /opt/patroni-venv
+ENV PATH="/opt/patroni-venv/bin:$PATH"
+
+RUN pip3 install --no-cache-dir \
+	patroni[all,psycopg3]==${PATRONI_VERSION}
+
+COPY patroni.yml ${PATRONI_CONFIG}
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod a+x /usr/local/bin/entrypoint.sh
+
+ENV PATRONI_POSTGRESQL_DATA_DIR=/var/lib/postgresql/data
+ENV PATRONI_POSTGRESQL_CONFIG_DIR=${PATRONI_POSTGRESQL_DATA_DIR}
+
+USER postgres
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["patroni"]

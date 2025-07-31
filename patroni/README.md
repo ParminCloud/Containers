@@ -29,3 +29,9 @@ And it's mode must be `700` or `750`
 
 Do not forget to expose required ports (according to your configuration file).
 default configuration file is available at [./patroni.yml](./patroni.yml).
+
+`patronictl` access can be achivied by specifing config path to `$PATRONI_CONFIG` like
+
+```shell
+patronictl -c $PATRONI_CONFIG list
+```

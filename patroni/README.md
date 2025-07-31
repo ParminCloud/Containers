@@ -1,6 +1,7 @@
 # Patroni Container images
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ParminCloud/Containers/patroni.yaml)
+
 Minimal Patroni container images for running PostgreSQL clusters in containers (specially non-kubernetes environments).
 
 ## Available images

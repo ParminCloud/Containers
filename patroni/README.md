@@ -22,5 +22,9 @@ Currently available images are:
 Bind mount your configuration file to `/etc/patroni.yml` and run the container (Can be overritten by setting `PATRONI_CONFIG`).
 and also bind mount your data directory to `/var/lib/postgresql/data`.
 
+> [!IMPORTANT]
+Data directory owner must be `999:999` (Acording to PostgreSQL container image which is our base image)  
+And it's mode must be `700` or `750`  
+
 Do not forget to expose required ports (according to your configuration file).
 default configuration file is available at [./patroni.yml](./patroni.yml).

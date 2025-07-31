@@ -21,6 +21,7 @@ RUN apt-get update && \
 	dumb-init \
 	vim \
 	less \
+	ncdu \
 	locales \
 	&& \
 	rm -rf /var/lib/apt/lists/*

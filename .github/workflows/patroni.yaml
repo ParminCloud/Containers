@@ -62,7 +62,7 @@ jobs:
         file: ./patroni/Containerfile
         labels: ${{ steps.meta.outputs.labels }}
         push: true
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64
         build-args: |
             PGVERSION=${{ matrix.pg_version }}
             PATRONI_VERSION=${{ env.PATRONI_VERSION }}

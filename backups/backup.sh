@@ -41,7 +41,7 @@ fi
 
 aws s3 cp "$LOCAL_FILENAME" "$S3_UPLOAD_URI"
 
-if [ -n "$BACKUP_RETENTION_DAYS"]; then
+if [ -n "$BACKUP_RETENTION_DAYS" ]; then
 	log "Removing old backups from S3..."
 	S3_RETENTION_QUERY="Contents[?LastModified<='$(subtract-date-from-now $BACKUP_RETENTION_DAYS) 00:00:00'].{Key: Key}"
 	aws s3api list-objects \

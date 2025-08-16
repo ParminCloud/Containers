@@ -27,3 +27,7 @@ subtract-date-from-now() {
 	SEC=$((86400 * DAYS))
 	date -d "@$(($(date +%s) - SEC))" +"%Y-%m-%d"
 }
+
+aws() {
+	command /usr/local/bin/aws "$@"
+}

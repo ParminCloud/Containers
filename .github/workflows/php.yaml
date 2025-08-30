@@ -82,5 +82,5 @@ jobs:
           PHP_VERSION=${{ matrix.php.version }}
           START_RUNTIME=${{ matrix.runtime.start }}
         tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:php${{ matrix.php_version }}-${{ matrix.runtime.start }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:php${{ matrix.php.version }}-${{ matrix.runtime.start }}
 

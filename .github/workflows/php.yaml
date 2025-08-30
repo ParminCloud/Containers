@@ -16,10 +16,16 @@ jobs:
     strategy:
       matrix:
         php_version:
-          - "8.1"
-          - "8.2"
-          - "8.3"
-          - "8.4"
+          - version: "8.1"
+            debian_version: bookworm
+          - version: "8.2"
+            debian_version: bookworm
+          - version: "8.3"
+            debian_version: bookworm
+          - version: "8.4"
+            debian_version: bookworm
+          - version: "7.4"
+            debian_version: bullseye
         runtime:
           - php: apache
             start: apache
@@ -72,8 +78,8 @@ jobs:
         platforms: linux/amd64
         build-args: |
           PHP_RUNTIME=${{ matrix.runtime.php }}
-          DEBIAN_VERSION=bookworm
-          PHP_VERSION=${{ matrix.php_version }}
+          DEBIAN_VERSION=${{ matrix.php.debian_version }}
+          PHP_VERSION=${{ matrix.php.version }}
           START_RUNTIME=${{ matrix.runtime.start }}
         tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:php${{ matrix.php_version }}-${{ matrix.runtime.start }}

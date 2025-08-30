@@ -15,7 +15,7 @@ jobs:
   build-image:
     strategy:
       matrix:
-        php_version:
+        php:
           - version: "8.1"
             debian_version: bookworm
           - version: "8.2"

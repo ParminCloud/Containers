@@ -13,7 +13,7 @@ DATA_DIR="$(mktemp -d)"
 
 trap "rm -rf $DATA_DIR" EXIT
 
-log "Creating basebackup"
+log "Creating dump"
 mongodump --uri="$MONGODB_URI" -j $(nproc) --out="${DATA_DIR}"
 
 log "Creating GZipped Tar Archive of backup"

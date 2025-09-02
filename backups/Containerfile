@@ -152,7 +152,7 @@ COPY --chmod=0775 ssh-command.sh /opt/parmincloud/backups/ssh-command
 
 FROM base AS mongo-dump
 
-ENV BACKUP_CMD="/opt/parmincloud/backups/mongo-command"
+ENV BACKUP_CMD="/opt/parmincloud/backups/mongo-dump"
 
 ENV MONGODB_URI=""
 

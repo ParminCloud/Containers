@@ -6,17 +6,18 @@ Minimal Patroni container images for running PostgreSQL clusters in containers (
 
 ## Available images
 
-We are supprting latest patroni version with supported PostgreSQL versions. (17, 16, 15, 14, 13)
+We are supprting latest patroni version with supported PostgreSQL versions. (18, 17, 16, 15, 14, 13)
 
 `ghcr.io/parmincloud/containers/patroni:<patroni_version>-pg<pg_version>`
 
 Currently available images are:
 
-* `ghcr.io/parmincloud/containers/patroni:4.0.6-pg17`
-* `ghcr.io/parmincloud/containers/patroni:4.0.6-pg16`
-* `ghcr.io/parmincloud/containers/patroni:4.0.6-pg15`
-* `ghcr.io/parmincloud/containers/patroni:4.0.6-pg14`
-* `ghcr.io/parmincloud/containers/patroni:4.0.6-pg13`
+* `ghcr.io/parmincloud/containers/patroni:4.1.0-pg18`
+* `ghcr.io/parmincloud/containers/patroni:4.1.0-pg17`
+* `ghcr.io/parmincloud/containers/patroni:4.1.0-pg16`
+* `ghcr.io/parmincloud/containers/patroni:4.1.0-pg15`
+* `ghcr.io/parmincloud/containers/patroni:4.1.0-pg14`
+* `ghcr.io/parmincloud/containers/patroni:4.1.0-pg13`
 
 ## Usage
 

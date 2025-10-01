@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         pg_version:
+          - "18"
           - "17"
           - "16"
           - "15"
@@ -27,7 +28,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: parmincloud/containers/patroni
-      PATRONI_VERSION: 4.0.6
+      PATRONI_VERSION: 4.1.0
 
     steps:
     - name: Checkout repository

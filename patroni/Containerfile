@@ -14,6 +14,7 @@ RUN apt-get update && \
 	libpq-dev \
 	build-essential \
     pkg-config \
+    libsystemd-dev \
 	postgresql-plpython3-${PGVERSION} \
 	curl \
 	jq \

@@ -13,6 +13,7 @@ RUN apt-get update && \
 	python3-full \
 	libpq-dev \
 	build-essential \
+    pkg-config \
 	postgresql-plpython3-${PGVERSION} \
 	curl \
 	jq \

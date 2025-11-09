@@ -86,6 +86,16 @@ jobs:
             args: |
               PGVERSION=17
               DEBIAN_VERSION=bookworm
+          - name: pg-basebackup
+            tag: pg18-basebackup
+            args: |
+              PGVERSION=18
+              DEBIAN_VERSION=bookworm
+          - name: pg-dump
+            tag: pg18-dump
+            args: |
+              PGVERSION=18
+              DEBIAN_VERSION=bookworm
 
     name: Build Image
     runs-on: ubuntu-latest

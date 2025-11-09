@@ -13,7 +13,14 @@ remove-lock() {
 	rm -f "$LOCKFILE"
 }
 
-trap remove-lock EXIT
+LOCAL_FILENAME=/tmp/nonexistingfile
+
+cleanup() {
+	remove-lock
+	rm -f "$LOCAL_FILENAME"
+}
+
+trap cleanup EXIT
 
 flock -xn 100 || (
 	log "Backup already running... exiting..."

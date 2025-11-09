@@ -24,10 +24,10 @@ jobs:
             tag: mongodump
             args: |
               DEBIAN_VERSION=bookworm
-          - name: mysql-dump
-            tag: mysqldump
-            args: |
-              DEBIAN_VERSION=bookworm
+          # - name: mysql-dump
+          #   tag: mysqldump
+          #   args: |
+          #     DEBIAN_VERSION=bookworm
           - name: ssh-file
             tag: sshfile
             args: |
@@ -90,12 +90,12 @@ jobs:
             tag: pg18-basebackup
             args: |
               PGVERSION=18
-              DEBIAN_VERSION=bookworm
+              DEBIAN_VERSION=trixie
           - name: pg-dump
             tag: pg18-dump
             args: |
               PGVERSION=18
-              DEBIAN_VERSION=bookworm
+              DEBIAN_VERSION=trixie
 
     name: Build Image
     runs-on: ubuntu-latest

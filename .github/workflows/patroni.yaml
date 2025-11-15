@@ -69,4 +69,3 @@ jobs:
             PATRONI_VERSION=${{ env.PATRONI_VERSION }}
         tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.PATRONI_VERSION }}-pg${{ matrix.pg_version }}
-

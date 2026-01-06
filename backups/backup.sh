@@ -7,6 +7,8 @@ set -o pipefail -ue
 LOCKFILE=/opt/parmincloud/backups/backup.lock
 exec 100>"$LOCKFILE"
 
+AWS="$(which aws)"
+
 remove-lock() {
 	flock -u 100
 	flock -xn 100
@@ -46,16 +48,16 @@ if [ -n "$S3_PREFIX" ]; then
 	S3_UPLOAD_URI="s3://${S3_BUCKET}/${S3_PREFIX}/$REMOTE_FILENAME"
 fi
 
-aws s3 cp "$LOCAL_FILENAME" "$S3_UPLOAD_URI"
+$AWS s3 cp "$LOCAL_FILENAME" "$S3_UPLOAD_URI"
 
 if [ -n "$BACKUP_RETENTION_DAYS" ]; then
 	log "Removing old backups from S3..."
 	S3_RETENTION_QUERY="Contents[?LastModified<='$(subtract-date-from-now $BACKUP_RETENTION_DAYS) 00:00:00'].{Key: Key}"
-	aws s3api list-objects \
+	$AWS s3api list-objects \
 		--bucket "${S3_BUCKET}" \
 		--prefix "${S3_PREFIX:-}" \
 		--query "${S3_RETENTION_QUERY}" \
-		--output text | xargs -P "$(nproc)" -I '{}' aws s3 rm "s3://${S3_BUCKET}/{}"
+		--output text | xargs -P "$(nproc)" -I '{}' $AWS s3 rm "s3://${S3_BUCKET}/{}"
 fi
 
 log "Backup successfully done"

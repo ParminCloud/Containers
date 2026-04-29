@@ -29,13 +29,13 @@ if [ ! -f "${HOME}/.ssh/id_rsa" ]; then
 fi
 
 log "Setting up ssh client configuration/agent"
-eval $(ssh-agent -s)
+eval $(ssh-agent -s) >/dev/null 2>&1
 if [ "$SSH_AUTH" = "key" ]; then
 	echo "${SSH_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
 fi
 mkdir -p "${HOME}/.ssh"
 chmod 700 "${HOME}/.ssh"
-ssh-keyscan -p "${SSH_PORT}" "${SSH_HOST}" >> "${HOME}/.ssh/known_hosts"
+ssh-keyscan -p "${SSH_PORT}" "${SSH_HOST}" >>"${HOME}/.ssh/known_hosts"
 chmod 644 "${HOME}/.ssh/known_hosts"
 
 BACKUP_OUT=/tmp/backup.tar.gz
@@ -48,12 +48,12 @@ if [ "${SSH_AUTH}" = *"key"* ]; then
 	ssh -n \
 		-p "$SSH_PORT" \
 		"$SSH_USER"@"$SSH_HOST" \
-		"$REMOTE_COMMAND" > "${BACKUP_OUT}"
+		"$REMOTE_COMMAND" >"${BACKUP_OUT}"
 else
 	sshpass -p "$SSH_PASSWORD" \
 		ssh -n \
 		-p "$SSH_PORT" \
 		"$SSH_USER"@"$SSH_HOST" \
-		"$REMOTE_COMMAND" > "${BACKUP_OUT}"
+		"$REMOTE_COMMAND" >"${BACKUP_OUT}"
 fi
 echo "${BACKUP_OUT}"

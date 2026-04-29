@@ -36,6 +36,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	cron \
 	curl \
 	jq \
+	vim \
 	gnupg2 \
 	mandoc && \
 	rm -rf /etc/cron.*/*
@@ -156,10 +157,8 @@ ENV BACKUP_CMD="/opt/parmincloud/backups/mongo-dump"
 
 ENV MONGODB_URI=""
 
-RUN . /etc/os-release; \
-	curl -L https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian${VERSION_ID}-x86_64-100.10.0.deb -o mongodb-database-tools.deb && \
+RUN curl -L https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian12-x86_64-100.16.1.deb -o mongodb-database-tools.deb && \
 	dpkg -i mongodb-database-tools.deb && \
 	rm mongodb-database-tools.deb -f
-
 
 COPY --chmod=0775 mongo-dump.sh /opt/parmincloud/backups/mongo-dump

@@ -28,6 +28,10 @@ jobs:
             tag: mysqldump
             args: |
               DEBIAN_VERSION=trixie
+          - name: mariadb-dump
+            tag: mariadb-dump
+            args: |
+              DEBIAN_VERSION=trixie
           - name: ssh-file
             tag: sshfile
             args: |

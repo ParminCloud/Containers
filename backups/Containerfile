@@ -101,6 +101,7 @@ ENV MYSQL_HOST=""
 ENV MYSQL_PORT=""
 ENV MYSQL_USER=""
 ENV MYSQL_PASSWORD=""
+ENV DUMP_MODE="mysql"
 
 RUN curl -L --output mysql-apt-confg.deb https://dev.mysql.com/get/mysql-apt-config_0.8.39-1_all.deb && \
 	apt-get update && \
@@ -114,6 +115,31 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	apt-get install -y mysql-client
 
 COPY --chmod=0775 mysql-dump.sh /opt/parmincloud/backups/mysql-dump
+
+FROM base AS mariadb-dump
+ENV BACKUP_CMD="/opt/parmincloud/backups/mysql-dump"
+
+ENV MARIADB_HOST=""
+ENV MARIADB_PORT=""
+ENV MARIADB_USER=""
+ENV MARIADB_PASSWORD=""
+ENV DUMP_MODE="mariadb"
+
+RUN curl -L --output mariadb_repo_setup https://downloads.mariadb.com/MariaDB/mariadb_repo_setup && \
+	apt-get update && \
+	apt-get install -y lsb-release wget && \
+	chmod a+x ./mariadb_repo_setup && \
+	./mariadb_repo_setup --mariadb-server-version="mariadb-12.2.2" \
+	rm -f mariadb_repo_setup
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+	--mount=type=cache,target=/var/lib/apt,sharing=locked \
+	apt-get update && \
+	apt-get install -y mariadb-client
+
+COPY --chmod=0775 mysql-dump.sh /opt/parmincloud/backups/mysql-dump
+
+
 
 FROM base AS ssh-file
 

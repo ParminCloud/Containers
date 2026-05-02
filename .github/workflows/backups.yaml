@@ -24,10 +24,10 @@ jobs:
             tag: mongodump
             args: |
               DEBIAN_VERSION=trixie
-          # - name: mysql-dump
-          #   tag: mysqldump
-          #   args: |
-          #     DEBIAN_VERSION=trixie
+          - name: mysql-dump
+            tag: mysqldump
+            args: |
+              DEBIAN_VERSION=trixie
           - name: ssh-file
             tag: sshfile
             args: |

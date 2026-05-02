@@ -31,7 +31,6 @@ if [ ${DUMP_MODE} == "mariadb" ]; then
 		--password="${MARIADB_PASSWORD}" \
 		--user="${MARIADB_USER}" \
 		--single-transaction \
-		--get-server-public-key \
 		--triggers \
 		--routines \
 		--events \

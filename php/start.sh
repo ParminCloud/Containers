@@ -10,8 +10,13 @@ case ${START_RUNTIME} in
     ;;
 
   apache)
-    sed -ri -e "s!/var/www/html!${DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf
-    sed -ri -e "s!/var/www/!${DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+    if ! grep -q "${DOCUMENT_ROOT}" /etc/apache2/sites-available/*.conf 2>/dev/null; then
+      sed -ri -e "s!/var/www/html!${DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf
+    fi
+    
+    if ! grep -q "${DOCUMENT_ROOT}" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf 2>/dev/null; then
+      sed -ri -e "s!/var/www/!${DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+    fi
     export APACHE_ENVVARS=/etc/apache2/envvars
     . "$APACHE_ENVVARS"
     for dir in "$APACHE_LOCK_DIR" "$APACHE_RUN_DIR" "$APACHE_LOG_DIR" "$APACHE_RUN_DIR/socks"; do
@@ -31,7 +36,9 @@ case ${START_RUNTIME} in
     ;;
 
   nginx)
-    sed -ri -e "s!/var/www/html!${DOCUMENT_ROOT}!g" /etc/nginx/nginx.conf
+    if ! grep -q "${DOCUMENT_ROOT}" /etc/nginx/nginx.conf 2>/dev/null; then
+      sed -ri -e "s!/var/www/html!${DOCUMENT_ROOT}!g" /etc/nginx/nginx.conf
+    fi
     exec /usr/bin/supervisord -c /opt/parmincloud/php/nginx-supervisord.conf
     ;;
 

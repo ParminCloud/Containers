@@ -17,13 +17,13 @@ jobs:
       matrix:
         php:
           - version: "8.1"
-            debian_version: bookworm
+            debian_version: trixie
           - version: "8.2"
-            debian_version: bookworm
+            debian_version: trixie
           - version: "8.3"
-            debian_version: bookworm
+            debian_version: trixie
           - version: "8.4"
-            debian_version: bookworm
+            debian_version: trixie
           - version: "7.4"
             debian_version: bullseye
         runtime:

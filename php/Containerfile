@@ -2,6 +2,7 @@ ARG PHP_VERSION
 ARG DEBIAN_VERSION
 ARG PHP_RUNTIME
 ARG START_RUNTIME=${PHP_RUNTIME}
+ARG NODE_VERSION
 FROM docker.io/library/php:${PHP_VERSION}-${PHP_RUNTIME}-${DEBIAN_VERSION} AS builder
 
 WORKDIR /var/www/html/
@@ -149,6 +150,7 @@ RUN mkdir -p /etc/apache2 /usr/lib/apache2
 FROM docker.io/library/debian:${DEBIAN_VERSION}-slim
 ARG START_RUNTIME
 ARG DEBIAN_VERSION
+ARG NODE_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
@@ -207,7 +209,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	&& curl -sSfL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/yarn.gpg \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
 	&& echo "deb http://apt.postgresql.org/pub/repos/apt ${DEBIAN_VERSION}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-	&& curl -sL https://deb.nodesource.com/setup_22.x | bash - \
+	&& curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends \
 	postgresql-client \

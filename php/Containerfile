@@ -16,7 +16,6 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloa
 RUN pecl channel-update pecl.php.net
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-	--mount=type=cache,target=/var/lib/apt,sharing=locked \
 	set -eux; \
 	apt-get update; \
 	apt-get install --no-install-recommends -y apt-transport-https && \
@@ -135,10 +134,12 @@ RUN set -eux; \
     | xargs -r -n1 readlink -f \
     | xargs -r -P "$(nproc)" -n1 dpkg-query --search \
     | awk -F ': ' '{print $1}' \
+    | sed -E 's/:([^:]+)$//' \
     | sort -u >> /PACKAGES; \
     \
     dpkg-query -S '/usr/lib/x86_64-linux-gnu/*' \
     | awk -F ': ' '{print $1}' \
+    | sed -E 's/:([^:]+)$//' \
     | sort -u >> /PACKAGES; \
     \
     sort -u /PACKAGES -o /PACKAGES
@@ -172,7 +173,6 @@ RUN mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-	--mount=type=cache,target=/var/lib/apt,sharing=locked \
 	apt-get update && \
 	apt-get install --no-install-recommends \
 	-y $(cat PACKAGES | sort | uniq) \
@@ -188,7 +188,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	procps
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-	--mount=type=cache,target=/var/lib/apt,sharing=locked \
 	if [ ${START_RUNTIME} = "apache" ]; then \
 	apt-get update && \
 	apt-get install --no-install-recommends -y apache2; \
@@ -204,7 +203,6 @@ COPY --from=docker.io/library/composer:2 /usr/bin/composer /usr/local/bin/compos
 RUN composer global require bamarni/symfony-console-autocomplete
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-	--mount=type=cache,target=/var/lib/apt,sharing=locked \
 	curl -sSfL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/pgdg.gpg \
 	&& curl -sSfL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/yarn.gpg \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \

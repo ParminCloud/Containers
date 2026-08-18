@@ -18,14 +18,19 @@ jobs:
         php:
           - version: "8.1"
             debian_version: trixie
+            node_version: "24"
           - version: "8.2"
             debian_version: trixie
+            node_version: "24"
           - version: "8.3"
             debian_version: trixie
+            node_version: "24"
           - version: "8.4"
             debian_version: trixie
+            node_version: "24"
           - version: "7.4"
             debian_version: bullseye
+            node_version: "24"
         runtime:
           - php: apache
             start: apache
@@ -81,6 +86,7 @@ jobs:
           DEBIAN_VERSION=${{ matrix.php.debian_version }}
           PHP_VERSION=${{ matrix.php.version }}
           START_RUNTIME=${{ matrix.runtime.start }}
+          NODE_VERSION=${{ matrix.php.node_version }}
         tags: |
           ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:php${{ matrix.php.version }}-${{ matrix.runtime.start }}
 

@@ -135,11 +135,13 @@ RUN set -eux; \
     | xargs -r -n1 readlink -f \
     | xargs -r -P "$(nproc)" -n1 dpkg-query --search \
     | awk -F ': ' '{print $1}' \
+    | sed 's/, /\n/g' \
     | sed -E 's/:([^:]+)$//' \
     | sort -u >> /PACKAGES; \
     \
     dpkg-query -S '/usr/lib/x86_64-linux-gnu/*' \
     | awk -F ': ' '{print $1}' \
+    | sed 's/, /\n/g' \
     | sed -E 's/:([^:]+)$//' \
     | sort -u >> /PACKAGES; \
     \

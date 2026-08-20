@@ -70,15 +70,17 @@ RUN export MAKE="make -j$(nproc)" && \
 	protobuf \
 	imagick \
 	opentelemetry && \
-	rm -rf /tmp/pear && \
-	docker-php-ext-enable \
+	rm -rf /tmp/pear
+
+RUN docker-php-ext-enable \
 	igbinary \
 	redis \
 	grpc \
 	protobuf \
 	imagick \
-	opentelemetry && \
-	docker-php-ext-install -j$(nproc) \
+	opentelemetry
+
+RUN docker-php-ext-install -j$(nproc) \
 	bz2 \
 	calendar \
 	curl \
@@ -97,11 +99,22 @@ RUN export MAKE="make -j$(nproc)" && \
 	xsl \
 	pdo_mysql \
 	mbstring \
-	opcache \
 	pcntl \
 	bcmath \
-	sockets && \
-	set -xe; \
+	sockets
+
+RUN set -eux; \
+	PHP_MAJOR_VERSION="$(php -r 'echo PHP_MAJOR_VERSION;')"; \
+	PHP_MINOR_VERSION="$(php -r 'echo PHP_MINOR_VERSION;')"; \
+	if [ "${PHP_MAJOR_VERSION}" -gt 8 ] || \
+	{ [ "${PHP_MAJOR_VERSION}" -eq 8 ] && [ "${PHP_MINOR_VERSION}" -ge 5 ]; }; then \
+	echo "PHP ${PHP_MAJOR_VERSION}.${PHP_MINOR_VERSION}: OPcache is built-in, skipping installation"; \
+	else \
+	echo "PHP ${PHP_MAJOR_VERSION}.${PHP_MINOR_VERSION}: installing OPcache"; \
+	docker-php-ext-install opcache; \
+	fi
+
+RUN set -xe; \
 	docker-php-ext-configure zip && \
 	docker-php-ext-install -j$(nproc) zip && \
 	docker-php-ext-configure gd \
@@ -110,14 +123,22 @@ RUN export MAKE="make -j$(nproc)" && \
 	--with-webp \
 	--with-freetype && \
 	docker-php-ext-install -j$(nproc) gd && \
-	docker-php-ext-install -j$(nproc) ffi && \
-	pecl install -o \
-	-D 'enable-openssl="yes" enable-http2="yes" enable-swoole-curl="yes" enable-cares="yes" enable-mysqlnd="yes" enable-swoole-pgsql="yes" enable-brotli="yes" enable-sockets="yes"' \
-	swoole && \
-	docker-php-ext-enable \
-	swoole && \
+	docker-php-ext-install -j$(nproc) ffi
+
+RUN set -eux; \
+	export MAKE="make -j$(nproc)" && \
+	pecl install -o -D '\
+	enable-openssl="yes" \
+	enable-http2="yes" \
+	enable-swoole-curl="yes" \
+	enable-cares="yes" \
+	enable-mysqlnd="yes" \
+	enable-swoole-pgsql="yes" \
+	enable-brotli="yes" \
+	enable-sockets="yes" \
+	' swoole && \
+	docker-php-ext-enable swoole && \
 	pecl install -o mongodb && \
-	rm -rf /tmp/pear && \
 	docker-php-ext-enable mongodb && \
 	rm -rf /tmp/pear && \
 	docker-php-ext-configure intl && \
@@ -129,23 +150,23 @@ RUN export MAKE="make -j$(nproc)" && \
 	find /usr/local/bin /usr/local/sbin /usr/local/lib -type f -perm /0111 -exec strip --strip-all '{}' + || true
 
 RUN set -eux; \
-    find /usr/local/lib/php /usr/local/bin /usr/local/sbin /usr/lib/x86_64-linux-gnu/ \
-        -type f -executable -exec ldd '{}' ';' 2>/dev/null \
-    | awk '/=>/ { print $(NF-1) }' \
-    | xargs -r -n1 readlink -f \
-    | xargs -r -P "$(nproc)" -n1 dpkg-query --search \
-    | awk -F ': ' '{print $1}' \
-    | sed 's/, /\n/g' \
-    | sed -E 's/:([^:]+)$//' \
-    | sort -u >> /PACKAGES; \
-    \
-    dpkg-query -S '/usr/lib/x86_64-linux-gnu/*' \
-    | awk -F ': ' '{print $1}' \
-    | sed 's/, /\n/g' \
-    | sed -E 's/:([^:]+)$//' \
-    | sort -u >> /PACKAGES; \
-    \
-    sort -u /PACKAGES -o /PACKAGES
+	find /usr/local/lib/php /usr/local/bin /usr/local/sbin /usr/lib/x86_64-linux-gnu/ \
+	-type f -executable -exec ldd '{}' ';' 2>/dev/null \
+	| awk '/=>/ { print $(NF-1) }' \
+	| xargs -r -n1 readlink -f \
+	| xargs -r -P "$(nproc)" -n1 dpkg-query --search \
+	| awk -F ': ' '{print $1}' \
+	| sed 's/, /\n/g' \
+	| sed -E 's/:([^:]+)$//' \
+	| sort -u >> /PACKAGES; \
+	\
+	dpkg-query -S '/usr/lib/x86_64-linux-gnu/*' \
+	| awk -F ': ' '{print $1}' \
+	| sed 's/, /\n/g' \
+	| sed -E 's/:([^:]+)$//' \
+	| sort -u >> /PACKAGES; \
+	\
+	sort -u /PACKAGES -o /PACKAGES
 
 RUN mkdir -p /etc/apache2 /usr/lib/apache2
 

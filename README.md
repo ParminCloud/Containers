@@ -6,3 +6,4 @@ Publicly available Container Images (published on `ghcr.io`)
 
 * [PHP](./php/README.md)
 * [Patroni](./patroni/README.md)
+* [Backups](./backups/README.md)

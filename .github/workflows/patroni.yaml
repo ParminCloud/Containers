@@ -28,7 +28,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: parmincloud/containers/patroni
-      PATRONI_VERSION: 4.1.0
+      PATRONI_VERSION: 4.1.5
 
     steps:
     - name: Checkout repository
